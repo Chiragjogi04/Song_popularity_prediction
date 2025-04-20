@@ -1,1 +1,1 @@
-**Run the main.py for starting the server**
+**Run the app.py for starting the server**
