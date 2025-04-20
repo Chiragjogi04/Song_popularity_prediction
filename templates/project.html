@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spotify Predictor - Project Visualization</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+  <style>
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    :root {
+      --bg1: #f5f7fa;
+      --bg2: #c3cfe2;
+      --accent: #6c5ce7;
+      --glass: rgba(255,255,255,0.75);
+    }
+    body {
+      margin: 0;
+      padding-top: 70px;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(-45deg, var(--bg1), var(--bg2));
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #333;
+    }
+    .navbar {
+      background: rgba(255,255,255,0.8)!important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+    }
+    .navbar-brand, .nav-link {
+      color: #333 !important;
+      font-weight: 500;
+    }
+    .nav-link:hover {
+      color: var(--accent) !important;
+    }
+    h1 {
+      font-weight: 700;
+      color: #333;
+    }
+    .card {
+      background: var(--glass);
+      border: none;
+      border-radius: 1rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      transition: transform .3s, box-shadow .3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    }
+    .card-title {
+      font-weight: 600;
+      color: #333;
+    }
+    .table th, .table td {
+      color: #333;
+      border-top: none;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('index') }}">Spotify Predictor</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('trends') }}">Analysis</a></li>
+          <li class="nav-item active"><a class="nav-link" href="{{ url_for('project') }}">Project Visualization</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-5">
+    <h1 class="text-center mb-5">Project Visualizations</h1>
+
+    <div class="card p-4 mb-5" data-aos="fade-up">
+      <h3 class="card-title mb-3">Bar Graph: Predicted vs. Actual Track Popularity</h3>
+      {% if bar_img %}
+        <img src="data:image/png;base64,{{ bar_img }}" class="img-fluid rounded" alt="Bar Graph">
+      {% else %}
+        <p class="text-danger">Error generating bar graph.</p>
+      {% endif %}
+    </div>
+
+    <div class="card p-4 mb-5" data-aos="fade-up" data-aos-delay="100">
+      <h3 class="card-title mb-3">Scatter Plot: Actual vs. Predicted Popularity</h3>
+      {% if scatter_img %}
+        <img src="data:image/png;base64,{{ scatter_img }}" class="img-fluid rounded" alt="Scatter Plot">
+      {% else %}
+        <p class="text-danger">Error generating scatter plot.</p>
+      {% endif %}
+    </div>
+
+    <div class="card p-4 mb-5" data-aos="fade-up" data-aos-delay="200">
+      <h3 class="card-title mb-3">Model Metrics and Custom Accuracy</h3>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Mean Squared Error (MSE):</strong> {{ mse|round(2) }}</li>
+        <li class="list-group-item"><strong>R<sup>2</sup> Score:</strong> {{ r2|round(2) }}</li>
+        <li class="list-group-item"><strong>Custom Regression Accuracy (within 15 popularity points):</strong> {{ (custom_accuracy * 100)|round(2) }}%</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    AOS.init({ duration: 700, once: true });
+  </script>
+</body>
+</html>
